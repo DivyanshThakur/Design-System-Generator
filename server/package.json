@@ -2,7 +2,7 @@
   "name": "design-system-generator-server",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.ts",
+  "main": "index.js",
   "type": "commonjs",
   "scripts": {
     "start": "ts-node src/index.ts",
