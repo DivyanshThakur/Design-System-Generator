@@ -7,6 +7,7 @@ dotenv.config();
 import generalConfig from './config/general.config';
 import helmet from 'helmet';
 import cors from 'cors';
+import appRouter from './routers';
 import connectDB from './utils/db';
 
 const app = express();
@@ -22,6 +23,8 @@ app.use(
         origin: generalConfig.ALLOWED_DOMAINS,
     }),
 );
+
+app.use('/api', appRouter);
 
 app.get('/', (_req: Request, res: Response) => {
     res.json({ message: 'Namaste From Covrzy API' });
