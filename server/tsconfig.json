@@ -25,6 +25,6 @@
         "typeRoots": ["./src/types/**", "./node_modules/@types"]
     },
     "include": [
-        "src/**/*.ts", "../client/src/utils/userAuth.ts",
+        "src/**/*.ts"
     ]
 }
