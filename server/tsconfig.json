@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "lib": ["es2022"],
+        "esModuleInterop": true,
+        "target": "es2022",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "outDir": "./build",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "resolveJsonModule": true,
+        "sourceMap": true,
+        // "strict": true,
+        "allowJs": false,
+        "skipLibCheck": true,
+        // "strictNullChecks": true,
+        // "strictPropertyInitialization": true,
+        // "noImplicitAny": true,
+        // "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "typeRoots": ["./src/types/**", "./node_modules/@types"]
+    },
+    "include": [
+        "src/**/*.ts", "../client/src/utils/userAuth.ts",
+    ]
+}
