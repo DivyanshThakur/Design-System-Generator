@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -14,13 +15,14 @@ const app = express();
 
 connectDB();
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(
     cors({
-        credentials: true,
         origin: generalConfig.ALLOWED_DOMAINS,
+        credentials: true,
     }),
 );
 

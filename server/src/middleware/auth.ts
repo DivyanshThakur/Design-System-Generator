@@ -11,11 +11,13 @@ const authMiddleware = (
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader?.split(' ')[1];
         if (!token) {
-            return res.status(401).send('Unauthorized Access');
+            return res.status(401).json({ message: 'Unauthorized Access!' });
         }
-        jwt.verify(token, generalConfig.REFRESH_TOKEN_SECRET, (err) => {
+        jwt.verify(token, generalConfig.ACCESS_TOKEN_SECRET, (err) => {
             if (err) {
-                return res.status(403).send('Unauthorized Access!');
+                return res
+                    .status(401)
+                    .json({ message: 'Unauthorized Access!' });
             }
 
             const decodedData: any = jwt.decode(token);

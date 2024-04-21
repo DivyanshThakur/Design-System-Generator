@@ -63,7 +63,7 @@ export const getRefreshToken = function (id: string, tokenVersion: number) {
     });
 };
 
-export const sendRefreshToken = function (res, token: string) {
+export const sendRefreshToken = function (res: any, token: string) {
     res.cookie(
         'jwt',
         { token },
