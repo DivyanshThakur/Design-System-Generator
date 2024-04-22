@@ -4,4 +4,3 @@ src/logs/
 node_modules
 build
 .env
-.env.*
