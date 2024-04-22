@@ -3,6 +3,5 @@ node_modules/
 src/logs/
 node_modules
 build
-dist
 .env
 .env.*
