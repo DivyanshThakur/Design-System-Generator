@@ -3,12 +3,14 @@ import { setupListeners } from '@reduxjs/toolkit/query/react';
 import selectedProjectReducer from './slices/selectedProject';
 import themeReducer from './slices/theme';
 import { rootApi } from './api';
+import componentReducer from './slices/component';
 
 const store = configureStore({
     reducer: {
         [rootApi.reducerPath]: rootApi.reducer,
         selectedProject: selectedProjectReducer,
         theme: themeReducer,
+        component: componentReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(rootApi.middleware),
