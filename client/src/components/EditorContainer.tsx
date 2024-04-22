@@ -4,7 +4,9 @@ import { Box, ButtonGroup, Button, Container } from '@mui/material';
 import ColorThemeEditor from './ColorThemeEditor';
 import RadiusThemeEditor from './RadiusThemeEditor';
 import SpacingThemeEditor from './SpacingThemeEditor';
-import StyledComponentViewer from './StyledComponentViewer';
+import StyledComponentContainer from './StyledComponentContainer';
+import { useSelector } from 'react-redux';
+import { useUpdateThemeByProjectIdMutation } from '../redux/api/theme';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -27,6 +29,11 @@ const CustomTabPanel = (props: TabPanelProps) => {
 };
 
 export default function EditorContainer() {
+    const [updateTheme] = useUpdateThemeByProjectIdMutation();
+    const projectData = useSelector((state: any) => state.selectedProject);
+
+    const theme = useSelector((state: any) => state.theme);
+
     const options = [
         {
             name: 'Color',
@@ -42,19 +49,28 @@ export default function EditorContainer() {
         },
         {
             name: 'Component',
-            component: <StyledComponentViewer />
-        }
+            component: <StyledComponentContainer />,
+        },
     ];
 
     const [selectedTab, setSelectedTab] = React.useState(options[0].name);
 
-    const handleChange = (tab: string) => {
+    const handleChange = async (tab: string) => {
+        await updateTheme({
+            projectId: projectData._id,
+            colors: theme.colors,
+            radiusList: theme.radiusList,
+            spacingList: theme.spacingList,
+        });
         setSelectedTab(tab);
     };
 
     return (
-        <Container component="main" style={{ padding: 40 }}>
-            <Box>
+        <Container
+            component="main"
+            style={{ paddingTop: 40, paddingBottom: 20 }}
+        >
+            <Box display='flex' justifyContent='center'>
                 <ButtonGroup>
                     {options.map(({ name }) => (
                         <Button
