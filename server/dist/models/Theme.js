@@ -18,8 +18,8 @@ const themeSchema = new Schema({
     },
     colors: [
         {
-            variableName: String,
-            hexCode: String,
+            name: String,
+            value: String,
         },
     ],
     spacing: {

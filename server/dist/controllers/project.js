@@ -8,6 +8,7 @@ const Project_1 = __importDefault(require("../models/Project"));
 const User_1 = __importDefault(require("../models/User"));
 const ErrorResponse_1 = __importDefault(require("../utils/ErrorResponse"));
 const protectedHandler_1 = require("../utils/protectedHandler");
+const Theme_1 = __importDefault(require("../models/Theme"));
 /**
  * @desc Create Project
  * @route POST /api/projects
@@ -24,6 +25,22 @@ exports.createProject = (0, protectedHandler_1.protectedHandler)(async (req, res
         name: projectName,
         userId: user._id,
     });
+    // Initializing basic theme setting so that user can edit or add more
+    const theme = await Theme_1.default.create({
+        projectId: project._id,
+        userId: user._id,
+        colors: [
+            {
+                name: 'Primary',
+                value: 'blue',
+            },
+            {
+                name: 'Secondary',
+                value: 'green',
+            },
+        ],
+    });
+    console.log('theme', theme);
     res.json({
         success: true,
         data: project,
