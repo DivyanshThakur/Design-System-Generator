@@ -83,10 +83,6 @@ const Header = () => {
 
     const handleSettingClick = (setting: string) => {
         switch (setting) {
-            case 'Profile':
-                // TODO: Add Profile page as bonus, if enough time left
-                break;
-
             case 'Logout':
                 logoutUser()
                     .then(() => 'User logged out successfully')
