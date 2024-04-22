@@ -14,11 +14,18 @@ import MenuItem from '@mui/material/MenuItem';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ProjectDropdown from './ProjectDropdown';
 import { getUserAuth, removeUserAuth } from '../utils/userAuth';
+import { Button } from '@mui/material';
+import { useUpdateThemeByProjectIdMutation } from '../redux/api/theme';
+import { useSelector } from 'react-redux';
 
 const settings = ['Logout'];
 
 const Header = () => {
     const navigate = useNavigate();
+    const [updateTheme] = useUpdateThemeByProjectIdMutation();
+    const theme = useSelector((state: any) => state.theme);
+    const projectData = useSelector((state: any) => state.selectedProject);
+
     const { accessToken } = getUserAuth();
     const { pathname } = useLocation();
     const projectId = pathname.startsWith('/projects/')
@@ -48,6 +55,12 @@ const Header = () => {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
+    };
+    const handleSaveProject = async () => {
+        await updateTheme({
+            projectId: projectData._id,
+            colors: theme.colors,
+        });
     };
 
     const logoutUser = async () => {
@@ -167,6 +180,17 @@ const Header = () => {
                             <ProjectDropdown value={projectId} />
                         )}
                     </Box>
+                    <Button
+                        variant="text"
+                        style={{
+                            background: 'white',
+                            marginLeft: 20,
+                            marginRight: 20,
+                        }}
+                        onClick={handleSaveProject}
+                    >
+                        Save Project
+                    </Button>
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton
