@@ -9,9 +9,7 @@ const selectedProjectSlice = createSlice({
     name: 'projectData',
     initialState,
     reducers: {
-        setProjectData: (state, action) => {
-            console.log(action)
-            const payload = action.payload;
+        setProjectData: (state, { payload }) => {
             if (payload._id) state._id = payload._id;
             if (payload.name) state.name = payload.name;
         },
