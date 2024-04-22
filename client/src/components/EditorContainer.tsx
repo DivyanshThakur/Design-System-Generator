@@ -11,6 +11,7 @@ import {
     useUpdateThemeByProjectIdMutation,
 } from '../redux/api/theme';
 import { setTheme } from '../redux/slices/theme';
+import { setSelectedStyleTab } from '../redux/slices/selectedProject';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -71,8 +72,6 @@ export default function EditorContainer() {
         },
     ];
 
-    const [selectedTab, setSelectedTab] = React.useState(options[0].name);
-
     const handleChange = async (tab: string) => {
         await updateTheme({
             projectId: projectData._id,
@@ -80,7 +79,7 @@ export default function EditorContainer() {
             radiusList: theme.radiusList,
             spacingList: theme.spacingList,
         });
-        setSelectedTab(tab);
+        dispatch(setSelectedStyleTab(tab));
     };
 
     return (
@@ -94,7 +93,9 @@ export default function EditorContainer() {
                         <Button
                             key={`btn-${name}`}
                             variant={
-                                selectedTab === name ? 'contained' : 'outlined'
+                                projectData.selectedStyleTab === name
+                                    ? 'contained'
+                                    : 'outlined'
                             }
                             onClick={() => handleChange(name)}
                         >
@@ -107,7 +108,7 @@ export default function EditorContainer() {
                 <CustomTabPanel
                     key={`tabPanel-${name}`}
                     tabName={name}
-                    value={selectedTab}
+                    value={projectData.selectedStyleTab}
                 >
                     {component}
                 </CustomTabPanel>

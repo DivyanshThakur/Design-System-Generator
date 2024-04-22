@@ -80,14 +80,14 @@ const ComponentSlice = createSlice({
             state,
             { payload }: { payload: string },
         ) => {
-             // save current selected state to list
-             if (state.selectedComponent._id !== '') {
-                 state.components = state.components.map((comp) => {
-                     if (comp._id === state.selectedComponent._id)
-                         return state.selectedComponent;
-                     return comp;
-                 });
-             }
+            // save current selected state to list
+            if (state.selectedComponent._id !== '') {
+                state.components = state.components.map((comp) => {
+                    if (comp._id === state.selectedComponent._id)
+                        return state.selectedComponent;
+                    return comp;
+                });
+            }
 
             const newSelectedState = state.components.find((comp) =>
                 comp.type === payload ? comp : null,

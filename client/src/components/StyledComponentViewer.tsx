@@ -87,41 +87,7 @@ const StyledComponent = (props: StyledComponentProps) => {
                     value={inputValue}
                     onChange={(e: any) => setInputValue(e.target.value)}
                     inputProps={{
-                        style: {
-                            color: getValueFromStyleName(
-                                'color',
-                                props.textColor,
-                            ),
-                            border: '1px solid black',
-                            borderColor: getValueFromStyleName(
-                                'color',
-                                props.borderColor,
-                            ),
-                            borderRadius: getValueFromStyleName(
-                                'radius',
-                                props.borderRadius,
-                            ),
-                            backgroundColor: getValueFromStyleName(
-                                'color',
-                                props.backgroundColor,
-                            ),
-                            paddingTop: getValueFromStyleName(
-                                'spacing',
-                                props.paddingY,
-                            ),
-                            paddingBottom: getValueFromStyleName(
-                                'spacing',
-                                props.paddingY,
-                            ),
-                            paddingLeft: getValueFromStyleName(
-                                'spacing',
-                                props.paddingX,
-                            ),
-                            paddingRight: getValueFromStyleName(
-                                'spacing',
-                                props.paddingX,
-                            ),
-                        },
+                        style: commonCustomStyles,
                     }}
                 />
             );

@@ -8,6 +8,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { CSSProperties } from 'react';
 import { useGetAllProjectsQuery } from '../redux/api/project';
+import { useDispatch } from 'react-redux';
+import { setSelectedComponentByType } from '../redux/slices/component';
 
 interface ProjectDropdownProps {
     value: string;
@@ -30,6 +32,7 @@ const ProjectDropdown = (props: ProjectDropdownProps) => {
         minWidth = 100,
         ...rest
     } = props;
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const { data } = useGetAllProjectsQuery();
 
@@ -37,6 +40,12 @@ const ProjectDropdown = (props: ProjectDropdownProps) => {
         const name = event.target.value;
         onChange?.(name);
     };
+
+    const handleNaviagtion = (id: string) => {
+        navigate(`/projects/${id}`);
+        dispatch(setSelectedComponentByType('button'));
+    };
+
     return (
         <FormControl>
             {!!label && label.length > 0 && (
@@ -62,7 +71,7 @@ const ProjectDropdown = (props: ProjectDropdownProps) => {
                     <MenuItem
                         key={project._id}
                         value={project._id}
-                        onClick={() => navigate(`/projects/${project._id}`)}
+                        onClick={() => handleNaviagtion(project._id)}
                     >
                         {project.name}
                     </MenuItem>
