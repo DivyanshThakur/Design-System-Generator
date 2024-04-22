@@ -12,8 +12,6 @@
         "sourceMap": true,
         "allowJs": false,
         "skipLibCheck": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,

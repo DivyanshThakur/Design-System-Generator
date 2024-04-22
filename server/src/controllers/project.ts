@@ -3,6 +3,7 @@ import Project from '../models/Project';
 import User from '../models/User';
 import ErrorResponse from '../utils/ErrorResponse';
 import { protectedHandler } from '../utils/protectedHandler';
+import Theme from '../models/Theme';
 
 interface ICreateProjectBody {
     projectName: string;
@@ -28,6 +29,24 @@ export const createProject = protectedHandler(
             name: projectName,
             userId: user._id,
         });
+
+        // Initializing basic theme setting so that user can edit or add more
+        const theme = await Theme.create({
+            projectId: project._id,
+            userId: user._id,
+            colors: [
+                {
+                    name: 'Primary',
+                    value: 'blue',
+                },
+                {
+                    name: 'Secondary',
+                    value: 'green',
+                },
+            ],
+        });
+
+        console.log('theme', theme);
 
         res.json({
             success: true,
