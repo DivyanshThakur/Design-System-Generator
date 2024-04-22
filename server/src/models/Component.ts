@@ -16,19 +16,17 @@ const componentSchema = new Schema(
         },
         type: {
             type: String,
-            enum: ['button', 'input', 'select'],
+            enum: ['button', 'input-text', 'radio', 'checkbox', 'select'],
             required: true,
         },
-        label: String,
-        value: String,
         themeId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Theme',
             required: true,
         },
         styles: {
-            backgroundColor: String,
             textColor: String,
+            backgroundColor: String,
             borderColor: String,
             borderRadius: String,
             paddingX: String,

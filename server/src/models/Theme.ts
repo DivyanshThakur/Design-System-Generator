@@ -20,31 +20,18 @@ const themeSchema = new Schema(
                 value: String,
             },
         ],
-        spacing: {
-            baseSizeInPx: Number,
-            variantCount: Number,
-            variants: [
-                {
-                    variableName: String,
-                    sizeInPx: Number,
-                },
-            ],
-        },
-        radius: {
-            isSharpRadius: {
-                type: Boolean,
-                default: false,
+        spacingList: [
+            {
+                name: String,
+                value: String,
             },
-            baseSizeInPx: Number,
-            variantCount: Number,
-            multiplier: Number,
-            variants: [
-                {
-                    variableName: String,
-                    sizeInPx: Number,
-                },
-            ],
-        },
+        ],
+        radiusList: [
+            {
+                name: String,
+                value: String,
+            },
+        ],
     },
     {
         timestamps: true,
