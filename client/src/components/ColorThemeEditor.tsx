@@ -2,12 +2,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Container, IconButton } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import InputList, { Item } from './InputList';
-import { useGetThemeByProjectIdQuery } from '../redux/api/theme';
+import {
+    useGetThemeByProjectIdQuery,
+    useUpdateThemeByProjectIdMutation,
+} from '../redux/api/theme';
 import { useEffect } from 'react';
 import { setTheme } from '../redux/slices/theme';
 
 const ColorThemeEditor = () => {
     const dispatch = useDispatch();
+    const [updateTheme] = useUpdateThemeByProjectIdMutation();
     const projectData = useSelector((state: any) => state.selectedProject);
     const colors: Item[] = useSelector((state: any) => state.theme.colors);
 
@@ -30,26 +34,24 @@ const ColorThemeEditor = () => {
     }, [data, dispatch]);
 
     const handleDelete = async (item: Item) => {
-        dispatch(
-            setTheme({
-                colors: data.colors.filter(
-                    (color: Item, index: number) =>
-                        index <= 1 || color._id === item._id,
-                ),
-            }),
-        );
+        await updateTheme({
+            projectId: projectData._id,
+            colors: colors.filter(
+                (color: Item, index: number) =>
+                    index <= 1 || color._id !== item._id,
+            ),
+        });
     };
 
     const handleAddColor = async () => {
         const item: any = {
-            name: `Color ${data.colors.length + 1}`,
+            name: `Color ${colors.length + 1}`,
             value: '',
         };
-        dispatch(
-            setTheme({
-                colors: [...data.colors, item],
-            }),
-        );
+        await updateTheme({
+            projectId: projectData._id,
+            colors: [...colors, item],
+        });
     };
 
     return (

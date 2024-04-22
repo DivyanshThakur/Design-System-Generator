@@ -1,6 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Item } from '../../components/InputList';
 
-const initialState = {
+interface InitialStateType {
+    colors: Item[];
+}
+
+const initialState: InitialStateType = {
     colors: [],
 };
 

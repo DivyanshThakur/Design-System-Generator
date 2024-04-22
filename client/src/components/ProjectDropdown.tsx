@@ -52,7 +52,7 @@ const ProjectDropdown = (props: ProjectDropdownProps) => {
                 variant={variant}
                 labelId="project-label-id"
                 id="select"
-                value={value}
+                value={data?.length > 0 ? value : ''}
                 label="Projects"
                 fullWidth
                 onChange={handleChange}
