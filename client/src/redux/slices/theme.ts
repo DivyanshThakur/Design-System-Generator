@@ -3,10 +3,14 @@ import { Item } from '../../components/InputList';
 
 interface InitialStateType {
     colors: Item[];
+    radiusList: Item[];
+    spacingList: Item[];
 }
 
 const initialState: InitialStateType = {
     colors: [],
+    radiusList: [],
+    spacingList: [],
 };
 
 const themeSlice = createSlice({
@@ -15,9 +19,13 @@ const themeSlice = createSlice({
     reducers: {
         setTheme: (state, { payload }) => {
             if (payload.colors) state.colors = payload.colors;
+            if (payload.radiusList) state.radiusList = payload.radiusList;
+            if (payload.spacingList) state.spacingList = payload.spacingList;
         },
         resetTheme: (state) => {
             state.colors = [];
+            state.radiusList = [];
+            state.spacingList = [];
         },
     },
 });

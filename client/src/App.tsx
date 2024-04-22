@@ -9,7 +9,6 @@ import PrivateRoute from './routes/PrivateRoute';
 import Login from './components/Login';
 import Register from './components/Register';
 import ProjectListPage from './components/ProjectListPage';
-import './App.css';
 import DesignSystemPage from './components/DesignSystemPage';
 import DashboardLayout from './components/DashboardLayout';
 

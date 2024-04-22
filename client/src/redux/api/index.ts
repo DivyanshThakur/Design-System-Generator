@@ -8,6 +8,6 @@ export const rootApi = createApi({
     reducerPath: 'rootApi',
     baseQuery: baseQueryWithReauth,
     keepUnusedDataFor: 5,
-    tagTypes: ['PROJECT_LIST', 'THEME'],
+    tagTypes: ['PROJECT_LIST', 'THEME', 'COMPONENTS'],
     endpoints: (builder) => ({}),
 });

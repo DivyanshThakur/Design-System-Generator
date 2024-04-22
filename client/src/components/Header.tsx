@@ -17,13 +17,19 @@ import { getUserAuth, removeUserAuth } from '../utils/userAuth';
 import { Button } from '@mui/material';
 import { useUpdateThemeByProjectIdMutation } from '../redux/api/theme';
 import { useSelector } from 'react-redux';
+import { useUpdateComponentByProjectIdMutation } from '../redux/api/component';
+import { ComponentInitialStateType } from '../redux/slices/component';
 
 const settings = ['Logout'];
 
 const Header = () => {
     const navigate = useNavigate();
     const [updateTheme] = useUpdateThemeByProjectIdMutation();
+    const [updateComponent] = useUpdateComponentByProjectIdMutation();
     const theme = useSelector((state: any) => state.theme);
+    const component: ComponentInitialStateType = useSelector(
+        (state: any) => state.component,
+    );
     const projectData = useSelector((state: any) => state.selectedProject);
 
     const { accessToken } = getUserAuth();
@@ -32,8 +38,7 @@ const Header = () => {
         ? pathname.substring(10)
         : '';
 
-    const showProjectDropdown =
-        accessToken && !['/projects'].includes(pathname);
+    const showHeaderButton = accessToken && !['/projects'].includes(pathname);
 
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
         null,
@@ -60,6 +65,13 @@ const Header = () => {
         await updateTheme({
             projectId: projectData._id,
             colors: theme.colors,
+            radiusList: theme.radiusList,
+            spacingList: theme.spacingList,
+        });
+        await updateComponent({
+            projectId: projectData._id,
+            componentId: component.selectedComponent._id,
+            ...component.selectedComponent,
         });
     };
 
@@ -113,7 +125,7 @@ const Header = () => {
                             display: { xs: 'flex', md: 'none' },
                         }}
                     >
-                        {showProjectDropdown && (
+                        {showHeaderButton && (
                             <IconButton
                                 size="large"
                                 aria-label="account of current user"
@@ -125,7 +137,7 @@ const Header = () => {
                                 <MenuIcon />
                             </IconButton>
                         )}
-                        {showProjectDropdown && (
+                        {showHeaderButton && (
                             <Menu
                                 id="menu-appbar"
                                 anchorEl={anchorElNav}
@@ -176,21 +188,23 @@ const Header = () => {
                             display: { xs: 'none', md: 'flex' },
                         }}
                     >
-                        {showProjectDropdown && (
+                        {showHeaderButton && (
                             <ProjectDropdown value={projectId} />
                         )}
                     </Box>
-                    <Button
-                        variant="text"
-                        style={{
-                            background: 'white',
-                            marginLeft: 20,
-                            marginRight: 20,
-                        }}
-                        onClick={handleSaveProject}
-                    >
-                        Save Project
-                    </Button>
+                    {showHeaderButton && (
+                        <Button
+                            variant="text"
+                            style={{
+                                background: 'white',
+                                marginLeft: 20,
+                                marginRight: 20,
+                            }}
+                            onClick={handleSaveProject}
+                        >
+                            Save Project
+                        </Button>
+                    )}
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton
