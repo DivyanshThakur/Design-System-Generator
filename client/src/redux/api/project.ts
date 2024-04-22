@@ -9,7 +9,7 @@ export const projectApi = rootApi.injectEndpoints({
                 body,
             }),
             invalidatesTags: ['PROJECT_LIST'],
-            transformResponse: (response: any) => response.data,
+            transformResponse: ({ data }) => data,
         }),
         getAllProjects: build.query<any, void>({
             query: () => 'projects',
@@ -24,4 +24,8 @@ export const projectApi = rootApi.injectEndpoints({
     }),
 });
 
-export const { useCreateProjectMutation, useGetAllProjectsQuery , useGetProjectByIdQuery } = projectApi;
+export const {
+    useCreateProjectMutation,
+    useGetAllProjectsQuery,
+    useGetProjectByIdQuery,
+} = projectApi;
