@@ -42,6 +42,7 @@ const ProjectListPage = () => {
                     />
                     <Button
                         variant="contained"
+                        disabled={projectName.trim().length === 0}
                         onClick={handleCreateNewProject}
                     >
                         Create New Project

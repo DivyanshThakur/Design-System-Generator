@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import { Box, ButtonGroup, Button, Container } from '@mui/material';
-import { useSelector } from 'react-redux';
 import ColorThemeEditor from './ColorThemeEditor';
 import RadiusThemeEditor from './RadiusThemeEditor';
 import SpacingThemeEditor from './SpacingThemeEditor';
@@ -28,9 +27,6 @@ const CustomTabPanel = (props: TabPanelProps) => {
 };
 
 export default function EditorContainer() {
-    const projectData = useSelector((state: any) => state.selectedProject);
-    console.log('pd', projectData);
-
     const options = [
         {
             name: 'Color',
