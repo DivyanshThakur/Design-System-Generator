@@ -10,12 +10,12 @@ import authMiddleware from '../middleware/auth';
 const componentRouter = express.Router();
 
 componentRouter
-    .route('/')
+    .route('/projects/:projectId/components')
     .post(authMiddleware, createComponent)
     .get(authMiddleware, getAllComponents);
 
 componentRouter
-    .route('/:componentId')
+    .route('/projects/:projectId/components/:componentId')
     .patch(authMiddleware, updateComponentById)
     .get(authMiddleware, getComponentById);
 
