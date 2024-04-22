@@ -7,20 +7,15 @@ import Theme from '../models/Theme';
 
 const ObjectId = mongoose.Types.ObjectId;
 
+interface Item {
+    name: string;
+    value: string;
+}
+
 interface ICreateThemeBody {
-    colors: { variableName: string; hexCode: string }[];
-    spacing: {
-        baseSizeInPx: number;
-        variantCount: number;
-        variants: { variableName: string; sizeInPx: number }[];
-    };
-    radius: {
-        isSharpRadius: boolean;
-        baseSizeInPx: number;
-        variantCount: number;
-        multiplier: number;
-        variants: { variableName: string; sizeInPx: number };
-    };
+    colors: Item[];
+    radiusList: Item[];
+    spacingList: Item[];
 }
 
 /**
@@ -30,7 +25,8 @@ interface ICreateThemeBody {
  */
 export const createTheme = protectedHandler(
     async (req: Request, res: Response) => {
-        const { colors, radius, spacing } = req.body as ICreateThemeBody;
+        const { colors, radiusList, spacingList } =
+            req.body as ICreateThemeBody;
         const userId = res.locals.userId as string;
         const projectId = req.params.projectId;
 
@@ -43,8 +39,8 @@ export const createTheme = protectedHandler(
         const theme = await Theme.create({
             projectId,
             colors,
-            radius,
-            spacing,
+            radiusList,
+            spacingList,
             userId: user._id,
         });
 
@@ -67,14 +63,19 @@ export const updateThemeByProjectId = protectedHandler(
         const projectId = req.params.projectId as string;
         const body: any = req.body;
 
+        const updateObj: any = {};
+
+        if (body.colors?.length >= 2) updateObj.colors = body.colors;
+        if (body.radiusList?.length >= 7) updateObj.radiusList = body.radiusList;
+        if (body.spacingList?.length >= 7)
+            updateObj.spacingList = body.spacingList;
+
         const theme = await Theme.findOneAndUpdate(
             {
                 userId: new ObjectId(userId),
                 projectId: new ObjectId(projectId),
             },
-            {
-                colors: body.colors,
-            },
+            updateObj,
             { returnOriginal: false },
         );
 

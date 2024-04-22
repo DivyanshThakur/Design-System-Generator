@@ -1,9 +1,13 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import Project from '../models/Project';
 import User from '../models/User';
 import ErrorResponse from '../utils/ErrorResponse';
 import { protectedHandler } from '../utils/protectedHandler';
 import Theme from '../models/Theme';
+import Component from '../models/Component';
+
+const ObjectId = mongoose.Types.ObjectId;
 
 interface ICreateProjectBody {
     projectName: string;
@@ -30,6 +34,37 @@ export const createProject = protectedHandler(
             userId: user._id,
         });
 
+        const pxList = [
+            {
+                name: 'xs',
+                value: '4',
+            },
+            {
+                name: 's',
+                value: '6',
+            },
+            {
+                name: 'sm',
+                value: '10',
+            },
+            {
+                name: 'm',
+                value: '16',
+            },
+            {
+                name: 'ml',
+                value: '24',
+            },
+            {
+                name: 'lg',
+                value: '36',
+            },
+            {
+                name: 'xl',
+                value: '54',
+            },
+        ];
+
         // Initializing basic theme setting so that user can edit or add more
         const theme = await Theme.create({
             projectId: project._id,
@@ -44,9 +79,37 @@ export const createProject = protectedHandler(
                     value: 'green',
                 },
             ],
+            radiusList: pxList,
+            spacingList: pxList,
         });
 
-        console.log('theme', theme);
+        const componentTypes = [
+            'button',
+            'input-text',
+            'radio',
+            'checkbox',
+            'select',
+        ];
+
+        // Initializing components with default styles
+        await Promise.all(
+            componentTypes.map((type) => {
+                return Component.create({
+                    projectId: project._id,
+                    userId: user._id,
+                    type,
+                    themeId: theme._id,
+                    styles: {
+                        textColor: '',
+                        backgroundColor: '',
+                        borderColor: 'Primary',
+                        borderRadius: 's',
+                        paddingX: 'm',
+                        paddingY: 's',
+                    },
+                });
+            }),
+        );
 
         res.json({
             success: true,
@@ -64,7 +127,7 @@ export const createProject = protectedHandler(
 export const getAllProjects = protectedHandler(
     async (_req: Request, res: Response) => {
         const userId = res.locals.userId;
-        const projects = await Project.find({ userId });
+        const projects = await Project.find({ userId: new ObjectId(userId) });
         res.json({
             success: true,
             data: projects,
@@ -82,7 +145,10 @@ export const getProjectById = protectedHandler(
     async (req: Request, res: Response) => {
         const userId = res.locals.userId as string;
         const projectId = req.params.projectId as string;
-        const projects = await Project.findOne({ _id: projectId, userId });
+        const projects = await Project.findOne({
+            _id: new ObjectId(projectId),
+            userId: new ObjectId(userId),
+        });
         res.json({
             success: true,
             data: projects,

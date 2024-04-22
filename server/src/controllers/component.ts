@@ -1,8 +1,11 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import User from '../models/User';
 import ErrorResponse from '../utils/ErrorResponse';
 import { protectedHandler } from '../utils/protectedHandler';
 import Component from '../models/Component';
+
+const ObjectId = mongoose.Types.ObjectId;
 
 interface ICreateComponentBody {
     type: 'button' | 'input' | 'select';
@@ -38,8 +41,8 @@ export const createComponent = protectedHandler(
         }
 
         const component = await Component.create({
-            projectId,
-            themeId,
+            projectId: new ObjectId(projectId),
+            themeId: new ObjectId(themeId),
             type,
             styles,
             label,
@@ -65,7 +68,10 @@ export const getAllComponents = protectedHandler(
         const userId = res.locals.userId;
         const projectId = req.params.projectId;
 
-        const components = await Component.find({ projectId, userId });
+        const components = await Component.find({
+            projectId: new ObjectId(projectId),
+            userId: new ObjectId(userId),
+        });
 
         res.json({
             success: true,
@@ -84,11 +90,19 @@ export const updateComponentById = protectedHandler(
     async (req: Request, res: Response) => {
         const userId = res.locals.userId as string;
         const projectId = req.params.projectId;
-        const componentId = req.params.id as string;
+        const componentId = req.params.componentId as string;
+        const reqBody = req.body;
+        console.log(reqBody);
 
         const component = await Component.findOneAndUpdate(
-            { _id: componentId, userId, projectId },
-            {},
+            {
+                _id: new ObjectId(componentId),
+                userId: new ObjectId(userId),
+                projectId: new ObjectId(projectId),
+            },
+            {
+                styles: reqBody.styles,
+            },
             { returnOriginal: false },
         );
 
@@ -112,9 +126,9 @@ export const getComponentById = protectedHandler(
         const componentId = req.params.id as string;
 
         const component = await Component.findOne({
-            _id: componentId,
-            projectId,
-            userId,
+            _id: new ObjectId(componentId),
+            userId: new ObjectId(userId),
+            projectId: new ObjectId(projectId),
         });
 
         res.json({
