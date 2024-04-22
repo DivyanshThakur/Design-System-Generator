@@ -30,11 +30,12 @@ const ColorThemeEditor = () => {
     };
 
     useEffect(() => {
-        if (data?.colors) dispatch(setTheme({ colors: data.colors }));
-        if (data?.radiusList)
-            dispatch(setTheme({ radiusList: data.radiusList }));
-        if (data?.spacingList)
-            dispatch(setTheme({ spacingList: data.spacingList }));
+        const updatedTheme: any = {};
+
+        if (data?.colors) updatedTheme.colors = data.colors;
+        if (data?.radiusList) updatedTheme.radiusList = data.radiusList;
+        if (data?.spacingList) updatedTheme.spacingList = data.spacingList;
+        dispatch(setTheme(updatedTheme));
     }, [data, dispatch]);
 
     const handleDelete = async (item: Item) => {
