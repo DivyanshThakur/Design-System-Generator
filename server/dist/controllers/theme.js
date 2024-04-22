@@ -16,7 +16,7 @@ const ObjectId = mongoose_1.default.Types.ObjectId;
  * @access Private
  */
 exports.createTheme = (0, protectedHandler_1.protectedHandler)(async (req, res) => {
-    const { colors, radius, spacing } = req.body;
+    const { colors, radiusList, spacingList } = req.body;
     const userId = res.locals.userId;
     const projectId = req.params.projectId;
     const user = await User_1.default.findById(userId);
@@ -26,8 +26,8 @@ exports.createTheme = (0, protectedHandler_1.protectedHandler)(async (req, res) 
     const theme = await Theme_1.default.create({
         projectId,
         colors,
-        radius,
-        spacing,
+        radiusList,
+        spacingList,
         userId: user._id,
     });
     res.json({
@@ -45,12 +45,17 @@ exports.updateThemeByProjectId = (0, protectedHandler_1.protectedHandler)(async 
     const userId = res.locals.userId;
     const projectId = req.params.projectId;
     const body = req.body;
+    const updateObj = {};
+    if (body.colors?.length >= 2)
+        updateObj.colors = body.colors;
+    if (body.radiusList?.length >= 7)
+        updateObj.radiusList = body.radiusList;
+    if (body.spacingList?.length >= 7)
+        updateObj.spacingList = body.spacingList;
     const theme = await Theme_1.default.findOneAndUpdate({
         userId: new ObjectId(userId),
         projectId: new ObjectId(projectId),
-    }, {
-        colors: body.colors,
-    }, { returnOriginal: false });
+    }, updateObj, { returnOriginal: false });
     res.json({
         success: true,
         data: theme,

@@ -4,11 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getProjectById = exports.getAllProjects = exports.createProject = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
 const Project_1 = __importDefault(require("../models/Project"));
 const User_1 = __importDefault(require("../models/User"));
 const ErrorResponse_1 = __importDefault(require("../utils/ErrorResponse"));
 const protectedHandler_1 = require("../utils/protectedHandler");
 const Theme_1 = __importDefault(require("../models/Theme"));
+const Component_1 = __importDefault(require("../models/Component"));
+const ObjectId = mongoose_1.default.Types.ObjectId;
 /**
  * @desc Create Project
  * @route POST /api/projects
@@ -25,6 +28,36 @@ exports.createProject = (0, protectedHandler_1.protectedHandler)(async (req, res
         name: projectName,
         userId: user._id,
     });
+    const pxList = [
+        {
+            name: 'xs',
+            value: '4',
+        },
+        {
+            name: 's',
+            value: '6',
+        },
+        {
+            name: 'sm',
+            value: '10',
+        },
+        {
+            name: 'm',
+            value: '16',
+        },
+        {
+            name: 'ml',
+            value: '24',
+        },
+        {
+            name: 'lg',
+            value: '36',
+        },
+        {
+            name: 'xl',
+            value: '54',
+        },
+    ];
     // Initializing basic theme setting so that user can edit or add more
     const theme = await Theme_1.default.create({
         projectId: project._id,
@@ -39,8 +72,33 @@ exports.createProject = (0, protectedHandler_1.protectedHandler)(async (req, res
                 value: 'green',
             },
         ],
+        radiusList: pxList,
+        spacingList: pxList,
     });
-    console.log('theme', theme);
+    const componentTypes = [
+        'button',
+        'input-text',
+        'radio',
+        'checkbox',
+        'select',
+    ];
+    // Initializing components with default styles
+    await Promise.all(componentTypes.map((type) => {
+        return Component_1.default.create({
+            projectId: project._id,
+            userId: user._id,
+            type,
+            themeId: theme._id,
+            styles: {
+                textColor: '',
+                backgroundColor: '',
+                borderColor: 'Primary',
+                borderRadius: 's',
+                paddingX: 'm',
+                paddingY: 's',
+            },
+        });
+    }));
     res.json({
         success: true,
         data: project,
@@ -54,7 +112,7 @@ exports.createProject = (0, protectedHandler_1.protectedHandler)(async (req, res
  */
 exports.getAllProjects = (0, protectedHandler_1.protectedHandler)(async (_req, res) => {
     const userId = res.locals.userId;
-    const projects = await Project_1.default.find({ userId });
+    const projects = await Project_1.default.find({ userId: new ObjectId(userId) });
     res.json({
         success: true,
         data: projects,
@@ -69,7 +127,10 @@ exports.getAllProjects = (0, protectedHandler_1.protectedHandler)(async (_req, r
 exports.getProjectById = (0, protectedHandler_1.protectedHandler)(async (req, res) => {
     const userId = res.locals.userId;
     const projectId = req.params.projectId;
-    const projects = await Project_1.default.findOne({ _id: projectId, userId });
+    const projects = await Project_1.default.findOne({
+        _id: new ObjectId(projectId),
+        userId: new ObjectId(userId),
+    });
     res.json({
         success: true,
         data: projects,

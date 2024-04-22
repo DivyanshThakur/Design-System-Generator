@@ -4,10 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getComponentById = exports.updateComponentById = exports.getAllComponents = exports.createComponent = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
 const User_1 = __importDefault(require("../models/User"));
 const ErrorResponse_1 = __importDefault(require("../utils/ErrorResponse"));
 const protectedHandler_1 = require("../utils/protectedHandler");
 const Component_1 = __importDefault(require("../models/Component"));
+const ObjectId = mongoose_1.default.Types.ObjectId;
 /**
  * @desc Create Component
  * @route POST /api/projects/:projectId/components
@@ -22,8 +24,8 @@ exports.createComponent = (0, protectedHandler_1.protectedHandler)(async (req, r
         throw new ErrorResponse_1.default('User not found', 400);
     }
     const component = await Component_1.default.create({
-        projectId,
-        themeId,
+        projectId: new ObjectId(projectId),
+        themeId: new ObjectId(themeId),
         type,
         styles,
         label,
@@ -44,7 +46,10 @@ exports.createComponent = (0, protectedHandler_1.protectedHandler)(async (req, r
 exports.getAllComponents = (0, protectedHandler_1.protectedHandler)(async (req, res) => {
     const userId = res.locals.userId;
     const projectId = req.params.projectId;
-    const components = await Component_1.default.find({ projectId, userId });
+    const components = await Component_1.default.find({
+        projectId: new ObjectId(projectId),
+        userId: new ObjectId(userId),
+    });
     res.json({
         success: true,
         data: components,
@@ -59,8 +64,16 @@ exports.getAllComponents = (0, protectedHandler_1.protectedHandler)(async (req, 
 exports.updateComponentById = (0, protectedHandler_1.protectedHandler)(async (req, res) => {
     const userId = res.locals.userId;
     const projectId = req.params.projectId;
-    const componentId = req.params.id;
-    const component = await Component_1.default.findOneAndUpdate({ _id: componentId, userId, projectId }, {}, { returnOriginal: false });
+    const componentId = req.params.componentId;
+    const reqBody = req.body;
+    console.log(reqBody);
+    const component = await Component_1.default.findOneAndUpdate({
+        _id: new ObjectId(componentId),
+        userId: new ObjectId(userId),
+        projectId: new ObjectId(projectId),
+    }, {
+        styles: reqBody.styles,
+    }, { returnOriginal: false });
     res.json({
         success: true,
         data: component,
@@ -77,9 +90,9 @@ exports.getComponentById = (0, protectedHandler_1.protectedHandler)(async (req, 
     const projectId = req.params.projectId;
     const componentId = req.params.id;
     const component = await Component_1.default.findOne({
-        _id: componentId,
-        projectId,
-        userId,
+        _id: new ObjectId(componentId),
+        userId: new ObjectId(userId),
+        projectId: new ObjectId(projectId),
     });
     res.json({
         success: true,

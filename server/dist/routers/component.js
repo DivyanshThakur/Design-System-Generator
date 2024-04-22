@@ -8,11 +8,11 @@ const component_1 = require("../controllers/component");
 const auth_1 = __importDefault(require("../middleware/auth"));
 const componentRouter = express_1.default.Router();
 componentRouter
-    .route('/')
+    .route('/projects/:projectId/components')
     .post(auth_1.default, component_1.createComponent)
     .get(auth_1.default, component_1.getAllComponents);
 componentRouter
-    .route('/:componentId')
+    .route('/projects/:projectId/components/:componentId')
     .patch(auth_1.default, component_1.updateComponentById)
     .get(auth_1.default, component_1.getComponentById);
 exports.default = componentRouter;
