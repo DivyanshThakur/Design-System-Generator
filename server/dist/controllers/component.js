@@ -66,7 +66,6 @@ exports.updateComponentById = (0, protectedHandler_1.protectedHandler)(async (re
     const projectId = req.params.projectId;
     const componentId = req.params.componentId;
     const reqBody = req.body;
-    console.log(reqBody);
     const component = await Component_1.default.findOneAndUpdate({
         _id: new ObjectId(componentId),
         userId: new ObjectId(userId),

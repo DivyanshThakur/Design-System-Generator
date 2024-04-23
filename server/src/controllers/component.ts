@@ -92,7 +92,6 @@ export const updateComponentById = protectedHandler(
         const projectId = req.params.projectId;
         const componentId = req.params.componentId as string;
         const reqBody = req.body;
-        console.log(reqBody);
 
         const component = await Component.findOneAndUpdate(
             {
@@ -109,7 +108,7 @@ export const updateComponentById = protectedHandler(
         res.json({
             success: true,
             data: component,
-            message: 'Component fetched successfully',
+            message: 'Component updated successfully',
         });
     },
 );
