@@ -1,4 +1,3 @@
-'use client';
 import React, { useEffect } from 'react';
 import { Box, ButtonGroup, Button, Container } from '@mui/material';
 import ColorThemeEditor from './ColorThemeEditor';

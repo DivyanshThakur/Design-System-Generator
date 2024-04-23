@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -15,24 +14,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ProjectDropdown from './ProjectDropdown';
 import { getUserAuth, removeUserAuth } from '../utils/userAuth';
 import { Button } from '@mui/material';
-import { useUpdateThemeByProjectIdMutation } from '../redux/api/theme';
-import { useSelector } from 'react-redux';
-import { useUpdateComponentByProjectIdMutation } from '../redux/api/component';
-import { ComponentInitialStateType } from '../redux/slices/component';
+import useAutoSave from '../hooks/useAutoSave';
 
 const settings = ['Logout'];
 
 const Header = () => {
     const navigate = useNavigate();
-    const [updateTheme] = useUpdateThemeByProjectIdMutation();
-    const [updateComponent] = useUpdateComponentByProjectIdMutation();
-    const theme = useSelector((state: any) => state.theme);
-    const component: ComponentInitialStateType = useSelector(
-        (state: any) => state.component,
-    );
-    const projectData = useSelector((state: any) => state.selectedProject);
-
-    const { accessToken } = getUserAuth();
+    const [saveProject] = useAutoSave();
+   const { accessToken } = getUserAuth();
     const { pathname } = useLocation();
     const projectId = pathname.startsWith('/projects/')
         ? pathname.substring(10)
@@ -60,19 +49,6 @@ const Header = () => {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
-    };
-    const handleSaveProject = async () => {
-        await updateTheme({
-            projectId: projectData._id,
-            colors: theme.colors,
-            radiusList: theme.radiusList,
-            spacingList: theme.spacingList,
-        });
-        await updateComponent({
-            projectId: projectData._id,
-            componentId: component.selectedComponent._id,
-            ...component.selectedComponent,
-        });
     };
 
     const logoutUser = async () => {
@@ -196,7 +172,7 @@ const Header = () => {
                                 marginLeft: 20,
                                 marginRight: 20,
                             }}
-                            onClick={handleSaveProject}
+                            onClick={saveProject}
                         >
                             Save Project
                         </Button>
