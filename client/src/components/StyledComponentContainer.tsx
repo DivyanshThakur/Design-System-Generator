@@ -28,7 +28,10 @@ const StyledComponentContainer = () => {
     const projectData = useSelector((state: any) => state.selectedProject);
     const [updateComponent] = useUpdateComponentByProjectIdMutation();
 
-    const { data } = useGetAllComponentsQuery(projectData._id);
+    const { data } = useGetAllComponentsQuery(projectData._id, {
+        skip: projectData._id.length === 0,
+    });
+
     const theme = useSelector((state: any) => state.theme);
     const { selectedComponent }: ComponentInitialStateType = useSelector(
         (state: any) => state.component,
@@ -45,8 +48,13 @@ const StyledComponentContainer = () => {
     useEffect(() => {
         if (data) {
             dispatch(setComponents(data));
-            if (selectedComponent._id === '')
-                dispatch(setSelectedComponentByType('button'));
+            dispatch(
+                setSelectedComponentByType(
+                    selectedComponent._id === ''
+                        ? 'button'
+                        : selectedComponent.type,
+                ),
+            );
         }
     }, [data, dispatch, selectedComponent]);
 
