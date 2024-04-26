@@ -70,6 +70,7 @@ const ColorThemeEditor = () => {
         >
             <Box>
                 <InputList
+                    colorInput
                     variableNameLabel="Variable Name"
                     variableValueLabel="Color Name"
                     items={colors}

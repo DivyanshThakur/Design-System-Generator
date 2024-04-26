@@ -1,4 +1,6 @@
+
 import { Box, IconButton, TextField } from '@mui/material';
+import { MuiColorInput } from 'mui-color-input'
 import DeleteIcon from '@mui/icons-material/Delete';
 
 export interface Item {
@@ -11,6 +13,7 @@ interface Props {
     variableNameLabel: string;
     variableValueLabel: string;
     items: Item[];
+    colorInput?: boolean;
     fixedItemCount: number;
     onChange: (item: Item) => void;
     onDelete: (item: Item) => void;
@@ -19,11 +22,12 @@ interface Props {
 const InputList = ({
     items,
     fixedItemCount,
+    colorInput = false,
     onChange,
     onDelete,
     variableNameLabel,
     variableValueLabel,
-}: Props) => {
+}: Props) => {    
     return (
         <Box>
             {items?.map((item, index) => (
@@ -32,6 +36,7 @@ const InputList = ({
                     display="flex"
                     alignItems="center"
                     gap={4}
+                    position='relative'
                 >
                     <TextField
                         margin="normal"
@@ -46,6 +51,19 @@ const InputList = ({
                             })
                         }
                     />
+                  {colorInput ?  
+                   <MuiColorInput   margin="normal"
+                   label={variableValueLabel}
+                   name={`value-${index + 1}`}
+                    variant='outlined' 
+                    format="hex" 
+                    value={item.value} 
+                    onChange={(value)=>onChange({
+                                _id: item._id,
+                                name: item.name,
+                                value,
+                            }) } />
+                            :
                     <TextField
                         margin="normal"
                         label={variableValueLabel}
@@ -58,7 +76,7 @@ const InputList = ({
                                 value: e.target.value,
                             })
                         }
-                    />
+                    />}
                     {index + 1 > fixedItemCount && (
                         <IconButton
                             aria-label="delete-color"
