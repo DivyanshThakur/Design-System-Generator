@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,10 +16,14 @@ import notify from '../utils/notify';
 const Register = () => {
     const navigate = useNavigate();
     const [register] = useRegisterMutation();
+    const [emailError, setEmailError] = useState('i');
+    const [passwordError, setPasswordError] = useState('i');
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
         const data = new FormData(event.currentTarget);
+
         const body = {
             firstName: data.get('firstName'),
             lastName: data.get('lastName'),
@@ -38,6 +42,25 @@ const Register = () => {
         } catch (e: any) {
             notify.error({ message: e.message });
             console.log('err', e);
+        }
+    };
+
+    const checkPassword = (e: any) => {
+        if (e.target.value.length < 6) {
+            setPasswordError('Password too short');
+        } else setPasswordError('');
+    };
+
+    const checkEmail = (e: any) => {
+        if (
+            !/^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$/.test(
+                (e.target.value as string) ?? '',
+            )
+        ) {
+            setEmailError('Invalid email address');
+            return;
+        } else {
+            setEmailError('');
         }
     };
 
@@ -94,6 +117,8 @@ const Register = () => {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                onChange={checkEmail}
+                                error={!!emailError && emailError !== 'i'}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -105,12 +130,15 @@ const Register = () => {
                                 type="password"
                                 id="password"
                                 autoComplete="new-password"
+                                error={!!passwordError && passwordError !== 'i'}
+                                onChange={checkPassword}
                             />
                         </Grid>
                     </Grid>
                     <Button
                         type="submit"
                         fullWidth
+                        disabled={!!emailError || !!passwordError}
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                     >
