@@ -1,6 +1,5 @@
 import React from 'react';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -11,21 +10,26 @@ import Container from '@mui/material/Container';
 import { useNavigate, Link } from 'react-router-dom';
 import { saveUserAuth } from '../utils/userAuth';
 import { useLoginMutation } from '../redux/api/auth';
+import LoadingButton from './LoadingButton';
+import * as yup from 'yup';
 import notify from '../utils/notify';
+import { useFormik } from 'formik';
+
+const validationSchema = yup.object({
+    email: yup.string().email().required('Email is required'),
+    password: yup
+        .string()
+        .min(6, 'Password should be of minimum 6 characters length')
+        .required('Password is required'),
+});
 
 const Login = () => {
     const navigate = useNavigate();
-    const [login] = useLoginMutation();
+    const [login, { isLoading }] = useLoginMutation();
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const body = {
-            email: data.get('email'),
-            password: data.get('password'),
-        };
+    const handleSubmit = async (formData: any) => {
         try {
-            const loginData: any = await login(body).unwrap();
+            const loginData: any = await login(formData).unwrap();
             saveUserAuth({
                 accessToken: loginData.accessToken,
                 expiresAt: loginData.expiresAt,
@@ -33,10 +37,19 @@ const Login = () => {
             });
             navigate('/projects');
         } catch (e: any) {
-            notify.error({ message: e.message });
+            notify.error({ message: e.data.message });
             console.log('err', e);
         }
     };
+
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: handleSubmit,
+    });
 
     return (
         <Container component="main" maxWidth="xs">
@@ -57,7 +70,7 @@ const Login = () => {
                 </Typography>
                 <Box
                     component="form"
-                    onSubmit={handleSubmit}
+                    onSubmit={formik.handleSubmit}
                     noValidate
                     sx={{ mt: 1 }}
                 >
@@ -70,6 +83,12 @@ const Login = () => {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        error={
+                            formik.touched.email && Boolean(formik.errors.email)
+                        }
+                        helperText={formik.touched.email && formik.errors.email}
                     />
                     <TextField
                         margin="normal"
@@ -80,15 +99,27 @@ const Login = () => {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        error={
+                            formik.touched.password &&
+                            Boolean(formik.errors.password)
+                        }
+                        helperText={
+                            formik.touched.password && formik.errors.password
+                        }
                     />
-                    <Button
-                        type="submit"
+                    <LoadingButton
                         fullWidth
+                        type="submit"
                         variant="contained"
+                        color="primary"
+                        isLoading={isLoading}
                         sx={{ mt: 3, mb: 2 }}
+                        style={{ margin: '1.5rem 0rem 1rem', height: '3.5rem' }}
                     >
                         Log In
-                    </Button>
+                    </LoadingButton>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
                             <Link

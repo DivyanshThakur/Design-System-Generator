@@ -44,6 +44,7 @@ exports.loginUser = (0, protectedHandler_1.protectedHandler)(async (req, res) =>
     if (!user) {
         throw new ErrorResponse_1.default(errorMessage, 401);
     }
+    console.log(user);
     const isPasswordMatched = await (0, User_1.matchPassword)(password, user.password);
     if (!isPasswordMatched)
         throw new ErrorResponse_1.default(errorMessage, 401);

@@ -76,7 +76,7 @@ exports.updateComponentById = (0, protectedHandler_1.protectedHandler)(async (re
     res.json({
         success: true,
         data: component,
-        message: 'Component fetched successfully',
+        message: 'Component updated successfully',
     });
 });
 /**

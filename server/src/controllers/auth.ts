@@ -98,7 +98,7 @@ export const logout = protectedHandler(async (_req, res) => {
  * @access Public
  */
 export const refreshToken = protectedHandler(async (req, res) => {
-    let cookieData = req.cookies?.jwt;    
+    let cookieData = req.cookies?.jwt;
 
     if (!cookieData) {
         throw new ErrorResponse('Refresh token not valid', 401);

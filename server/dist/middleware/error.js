@@ -14,8 +14,8 @@ exports.notFound = notFound;
 const errorHandler = (err, _req, res, _next) => {
     res.status(err.statusCode || 500).json({
         success: false,
-        message: err.message || "Server Error",
-        stack: general_config_js_1.default.NODE_ENV === "production" ? null : err.stack,
+        message: err.message || 'Server Error',
+        stack: general_config_js_1.default.NODE_ENV === 'production' ? null : err.stack,
     });
 };
 exports.errorHandler = errorHandler;

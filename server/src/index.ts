@@ -9,8 +9,9 @@ dotenv.config();
 import generalConfig from './config/general.config';
 import helmet from 'helmet';
 import cors from 'cors';
-import appRouter from './routers';
-import connectDB from './utils/db';
+import appRouter from './routers/index.js';
+import connectDB from './utils/db.js';
+import { errorHandler, notFound } from './middleware/error.js';
 
 const app = express();
 
@@ -33,6 +34,11 @@ app.use('/api', appRouter);
 app.get('/', (_req: Request, res: Response) => {
     res.json({ message: 'Namaste From Identity API' });
 });
+
+
+/* ERROR HANDLER */
+app.use(notFound);
+app.use(errorHandler);
 
 app.listen(generalConfig.PORT, () =>
     console.log('Server running on port', generalConfig.PORT),

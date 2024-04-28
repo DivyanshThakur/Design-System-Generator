@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
@@ -11,28 +9,29 @@ import Container from '@mui/material/Container';
 import { saveUserAuth } from '../utils/userAuth';
 import { useNavigate, Link } from 'react-router-dom';
 import { useRegisterMutation } from '../redux/api/auth';
+import LoadingButton from './LoadingButton';
+import * as yup from 'yup';
+import { useFormik } from 'formik';
 import notify from '../utils/notify';
+
+const validationSchema = yup.object({
+    firstName: yup.string().trim().required('First Name is required'),
+    lastName: yup.string().trim().required('Last Name is required'),
+    email: yup.string().trim().email().required('Email is required'),
+    password: yup
+        .string()
+        .trim()
+        .min(6, 'Password should be of minimum 6 characters length')
+        .required('Password is required'),
+});
 
 const Register = () => {
     const navigate = useNavigate();
-    const [register] = useRegisterMutation();
-    const [emailError, setEmailError] = useState('i');
-    const [passwordError, setPasswordError] = useState('i');
+    const [register, { isLoading }] = useRegisterMutation();
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        const data = new FormData(event.currentTarget);
-
-        const body = {
-            firstName: data.get('firstName'),
-            lastName: data.get('lastName'),
-            email: data.get('email'),
-            password: data.get('password'),
-        };
-
+    const handleSubmit = async (formData: any) => {
         try {
-            const registerData: any = await register(body).unwrap();
+            const registerData: any = await register(formData).unwrap();
             saveUserAuth({
                 accessToken: registerData.accessToken,
                 expiresAt: registerData.expiresAt,
@@ -40,29 +39,21 @@ const Register = () => {
             });
             navigate('/projects');
         } catch (e: any) {
-            notify.error({ message: e.message });
+            notify.error({ message: e.data.message });
             console.log('err', e);
         }
     };
 
-    const checkPassword = (e: any) => {
-        if (e.target.value.length < 6) {
-            setPasswordError('Password too short');
-        } else setPasswordError('');
-    };
-
-    const checkEmail = (e: any) => {
-        if (
-            !/^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$/.test(
-                (e.target.value as string) ?? '',
-            )
-        ) {
-            setEmailError('Invalid email address');
-            return;
-        } else {
-            setEmailError('');
-        }
-    };
+    const formik = useFormik({
+        initialValues: {
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: handleSubmit,
+    });
 
     return (
         <Container component="main" maxWidth="xs">
@@ -84,7 +75,7 @@ const Register = () => {
                 <Box
                     component="form"
                     noValidate
-                    onSubmit={handleSubmit}
+                    onSubmit={formik.handleSubmit}
                     sx={{ mt: 3 }}
                 >
                     <Grid container spacing={2}>
@@ -97,6 +88,16 @@ const Register = () => {
                                 id="firstName"
                                 label="First Name"
                                 autoFocus
+                                value={formik.values.firstName}
+                                onChange={formik.handleChange}
+                                error={
+                                    formik.touched.firstName &&
+                                    Boolean(formik.errors.firstName)
+                                }
+                                helperText={
+                                    formik.touched.firstName &&
+                                    formik.errors.firstName
+                                }
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -107,6 +108,16 @@ const Register = () => {
                                 label="Last Name"
                                 name="lastName"
                                 autoComplete="family-name"
+                                value={formik.values.lastName}
+                                onChange={formik.handleChange}
+                                error={
+                                    formik.touched.lastName &&
+                                    Boolean(formik.errors.lastName)
+                                }
+                                helperText={
+                                    formik.touched.lastName &&
+                                    formik.errors.lastName
+                                }
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -117,8 +128,15 @@ const Register = () => {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
-                                onChange={checkEmail}
-                                error={!!emailError && emailError !== 'i'}
+                                value={formik.values.email}
+                                onChange={formik.handleChange}
+                                error={
+                                    formik.touched.email &&
+                                    Boolean(formik.errors.email)
+                                }
+                                helperText={
+                                    formik.touched.email && formik.errors.email
+                                }
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -130,20 +148,30 @@ const Register = () => {
                                 type="password"
                                 id="password"
                                 autoComplete="new-password"
-                                error={!!passwordError && passwordError !== 'i'}
-                                onChange={checkPassword}
+                                value={formik.values.password}
+                                onChange={formik.handleChange}
+                                error={
+                                    formik.touched.password &&
+                                    Boolean(formik.errors.password)
+                                }
+                                helperText={
+                                    formik.touched.password &&
+                                    formik.errors.password
+                                }
                             />
                         </Grid>
                     </Grid>
-                    <Button
-                        type="submit"
+                    <LoadingButton
                         fullWidth
-                        disabled={!!emailError || !!passwordError}
+                        type="submit"
                         variant="contained"
+                        color="primary"
+                        isLoading={isLoading}
                         sx={{ mt: 3, mb: 2 }}
+                        style={{ margin: '1.5rem 0rem 1rem', height: '3.5rem' }}
                     >
                         Register
-                    </Button>
+                    </LoadingButton>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
                             <Link
