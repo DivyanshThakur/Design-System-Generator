@@ -8,6 +8,7 @@ export const authApi = rootApi.injectEndpoints({
                 method: 'POST',
                 body,
             }),
+            invalidatesTags: ['THEME', 'COMPONENTS', 'PROJECT_LIST'],
             transformResponse: (response: any) => response.data,
         }),
         register: build.mutation({
@@ -16,6 +17,7 @@ export const authApi = rootApi.injectEndpoints({
                 method: 'POST',
                 body,
             }),
+            invalidatesTags: ['THEME', 'COMPONENTS', 'PROJECT_LIST'],
             transformResponse: (response: any) => response.data,
         }),
         logout: build.mutation({
