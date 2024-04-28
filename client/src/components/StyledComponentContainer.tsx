@@ -83,7 +83,7 @@ const StyledComponentContainer = () => {
         });
         dispatch(setSelectedComponentByVariantId(e.target.value));
     };
-
+console.log('sel', theme.variants, selectedComponent.variantId)
     return (
         <Container
             style={{
@@ -124,7 +124,7 @@ const StyledComponentContainer = () => {
                                 variant="outlined"
                                 id="select-variant"
                                 labelId="variantLabel"
-                                value={selectedComponent.variantId}
+                                value={selectedComponent.variantId ?? theme.variants?.[0]?._id}
                                 label="Variant"
                                 name="variant"
                                 onChange={handleVariantChange}
