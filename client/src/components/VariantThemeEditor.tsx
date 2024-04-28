@@ -79,7 +79,7 @@ const VariantThemeEditor = () => {
             }}
         >
             <Box>
-                {variants.map((variant: Variant, index) => (
+                {variants?.map((variant: Variant, index) => (
                     <Box
                         key={variant._id}
                         display="flex"
