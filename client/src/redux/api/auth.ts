@@ -23,6 +23,7 @@ export const authApi = rootApi.injectEndpoints({
                 url: 'auth/logout',
                 method: 'POST',
             }),
+            invalidatesTags: ['THEME', 'COMPONENTS', 'PROJECT_LIST'],
         }),
         refreshToken: build.mutation({
             query: () => ({

@@ -15,13 +15,18 @@ import ProjectDropdown from './ProjectDropdown';
 import { getUserAuth, removeUserAuth } from '../utils/userAuth';
 import { Button } from '@mui/material';
 import useAutoSave from '../hooks/useAutoSave';
+import { resetProjectData } from '../redux/slices/selectedProject';
+import { useDispatch } from 'react-redux';
+import { resetComponent } from '../redux/slices/component';
+import { resetTheme } from '../redux/slices/theme';
 
 const settings = ['Logout'];
 
 const Header = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [saveProject] = useAutoSave();
-   const { accessToken } = getUserAuth();
+    const { accessToken } = getUserAuth();
     const { pathname } = useLocation();
     const projectId = pathname.startsWith('/projects/')
         ? pathname.substring(10)
@@ -63,6 +68,9 @@ const Header = () => {
                 logoutUser()
                     .then(() => 'User logged out successfully')
                     .catch((e) => console.log(e));
+                dispatch(resetProjectData());
+                dispatch(resetTheme());
+                dispatch(resetComponent());
                 break;
             default:
                 break;

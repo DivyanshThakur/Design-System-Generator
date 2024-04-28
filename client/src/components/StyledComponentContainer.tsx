@@ -83,7 +83,7 @@ const StyledComponentContainer = () => {
         });
         dispatch(setSelectedComponentByVariantId(e.target.value));
     };
-console.log('sel', theme.variants, selectedComponent.variantId)
+
     return (
         <Container
             style={{
