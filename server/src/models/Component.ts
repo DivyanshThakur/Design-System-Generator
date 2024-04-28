@@ -24,6 +24,10 @@ const componentSchema = new Schema(
             ref: 'Theme',
             required: true,
         },
+        variantId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Variant',
+        },
         styles: {
             textColor: String,
             backgroundColor: String,

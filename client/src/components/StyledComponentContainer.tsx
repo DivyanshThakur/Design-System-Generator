@@ -3,7 +3,9 @@ import {
     Button,
     ButtonGroup,
     Container,
+    FormControl,
     Grid,
+    InputLabel,
     MenuItem,
     Select,
     Typography,
@@ -15,6 +17,7 @@ import StyledComponentViewer from './StyledComponentViewer';
 import {
     ComponentInitialStateType,
     setComponents,
+    setSelectedComponentByVariantId,
     setSelectedComponentByType,
     setStyle,
 } from '../redux/slices/component';
@@ -22,6 +25,7 @@ import {
     useGetAllComponentsQuery,
     useUpdateComponentByProjectIdMutation,
 } from '../redux/api/component';
+import { Variant } from './VariantThemeEditor';
 
 const StyledComponentContainer = () => {
     const dispatch = useDispatch();
@@ -71,6 +75,15 @@ const StyledComponentContainer = () => {
         dispatch(setStyle({ [e.target.name]: e.target.value }));
     };
 
+    const handleVariantChange = async (e: any) => {
+        await updateComponent({
+            projectId: projectData._id,
+            componentId: selectedComponent._id,
+            ...selectedComponent,
+        });
+        dispatch(setSelectedComponentByVariantId(e.target.value));
+    };
+
     return (
         <Container
             style={{
@@ -105,6 +118,28 @@ const StyledComponentContainer = () => {
                         padding={2}
                         gap={2}
                     >
+                        <FormControl fullWidth>
+                            <InputLabel id="variantLabel">Variant</InputLabel>
+                            <Select
+                                variant="outlined"
+                                id="select-variant"
+                                labelId="variantLabel"
+                                value={selectedComponent.variantId}
+                                label="Variant"
+                                name="variant"
+                                onChange={handleVariantChange}
+                            >
+                                {theme.variants?.map((variant: Variant) => (
+                                    <MenuItem
+                                        key={variant.name}
+                                        value={variant._id}
+                                    >
+                                        {variant.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
                         <Box>
                             <Typography
                                 component="div"

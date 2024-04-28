@@ -114,6 +114,33 @@ export const updateComponentById = protectedHandler(
 );
 
 /**
+ * @desc DELETE Component by Variant Id
+ * @route DELETE /api/projects/:projectId/components
+ * @access Private
+ */
+export const deleteComponentsByVariantId = protectedHandler(
+    async (req: Request, res: Response) => {
+        const userId = res.locals.userId as string;
+        const projectId = req.params.projectId;
+        const variantId = req.body.variantId as string;
+
+        const components = await Component.find({
+            userId: new ObjectId(userId),
+            projectId: new ObjectId(projectId),
+            variantId: new ObjectId(variantId),
+        });
+
+        await Component.deleteMany(components);
+
+        res.json({
+            success: true,
+            data: components,
+            message: 'Components deleted successfully',
+        });
+    },
+);
+
+/**
  * @desc Get Component by Id
  * @route GET /api/projects/:projectId/components/:componentId
  * @access Private

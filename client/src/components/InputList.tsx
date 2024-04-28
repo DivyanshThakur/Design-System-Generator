@@ -1,6 +1,5 @@
-
 import { Box, IconButton, TextField } from '@mui/material';
-import { MuiColorInput } from 'mui-color-input'
+import { MuiColorInput } from 'mui-color-input';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 export interface Item {
@@ -27,7 +26,7 @@ const InputList = ({
     onDelete,
     variableNameLabel,
     variableValueLabel,
-}: Props) => {    
+}: Props) => {
     return (
         <Box>
             {items?.map((item, index) => (
@@ -36,7 +35,7 @@ const InputList = ({
                     display="flex"
                     alignItems="center"
                     gap={4}
-                    position='relative'
+                    position="relative"
                 >
                     <TextField
                         margin="normal"
@@ -51,32 +50,37 @@ const InputList = ({
                             })
                         }
                     />
-                  {colorInput ?  
-                   <MuiColorInput   margin="normal"
-                   label={variableValueLabel}
-                   name={`value-${index + 1}`}
-                    variant='outlined' 
-                    format="hex" 
-                    value={item.value} 
-                    onChange={(value)=>onChange({
-                                _id: item._id,
-                                name: item.name,
-                                value,
-                            }) } />
-                            :
-                    <TextField
-                        margin="normal"
-                        label={variableValueLabel}
-                        name={`value-${index + 1}`}
-                        value={item.value}
-                        onChange={(e) =>
-                            onChange({
-                                _id: item._id,
-                                name: item.name,
-                                value: e.target.value,
-                            })
-                        }
-                    />}
+                    {colorInput ? (
+                        <MuiColorInput
+                            margin="normal"
+                            label={variableValueLabel}
+                            name={`value-${index + 1}`}
+                            variant="outlined"
+                            format="hex"
+                            value={item.value}
+                            onChange={(value) =>
+                                onChange({
+                                    _id: item._id,
+                                    name: item.name,
+                                    value,
+                                })
+                            }
+                        />
+                    ) : (
+                        <TextField
+                            margin="normal"
+                            label={variableValueLabel}
+                            name={`value-${index + 1}`}
+                            value={item.value}
+                            onChange={(e) =>
+                                onChange({
+                                    _id: item._id,
+                                    name: item.name,
+                                    value: e.target.value,
+                                })
+                            }
+                        />
+                    )}
                     {index + 1 > fixedItemCount && (
                         <IconButton
                             aria-label="delete-color"

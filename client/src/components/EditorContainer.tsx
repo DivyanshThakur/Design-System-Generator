@@ -11,6 +11,7 @@ import {
 } from '../redux/api/theme';
 import { setTheme } from '../redux/slices/theme';
 import { setSelectedStyleTab } from '../redux/slices/selectedProject';
+import VariantThemeEditor from './VariantThemeEditor';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -49,6 +50,8 @@ export default function EditorContainer() {
         if (data?.colors) updatedTheme.colors = data.colors;
         if (data?.radiusList) updatedTheme.radiusList = data.radiusList;
         if (data?.spacingList) updatedTheme.spacingList = data.spacingList;
+        if (data?.variants) updatedTheme.variants = data.variants;
+
         dispatch(setTheme(updatedTheme));
     }, [data, dispatch]);
 
@@ -66,6 +69,10 @@ export default function EditorContainer() {
             component: <SpacingThemeEditor />,
         },
         {
+            name: 'Variant',
+            component: <VariantThemeEditor />,
+        },
+        {
             name: 'Component',
             component: <StyledComponentContainer />,
         },
@@ -77,6 +84,7 @@ export default function EditorContainer() {
             colors: theme.colors,
             radiusList: theme.radiusList,
             spacingList: theme.spacingList,
+            variants: theme.variants,
         });
         dispatch(setSelectedStyleTab(tab));
     };

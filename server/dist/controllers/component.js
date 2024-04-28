@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getComponentById = exports.updateComponentById = exports.getAllComponents = exports.createComponent = void 0;
+exports.getComponentById = exports.deleteComponentsByVariantId = exports.updateComponentById = exports.getAllComponents = exports.createComponent = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const User_1 = __importDefault(require("../models/User"));
 const ErrorResponse_1 = __importDefault(require("../utils/ErrorResponse"));
@@ -77,6 +77,27 @@ exports.updateComponentById = (0, protectedHandler_1.protectedHandler)(async (re
         success: true,
         data: component,
         message: 'Component updated successfully',
+    });
+});
+/**
+ * @desc DELETE Component by Variant Id
+ * @route DELETE /api/projects/:projectId/components
+ * @access Private
+ */
+exports.deleteComponentsByVariantId = (0, protectedHandler_1.protectedHandler)(async (req, res) => {
+    const userId = res.locals.userId;
+    const projectId = req.params.projectId;
+    const variantId = req.body.variantId;
+    const components = await Component_1.default.find({
+        userId: new ObjectId(userId),
+        projectId: new ObjectId(projectId),
+        variantId: new ObjectId(variantId),
+    });
+    await Component_1.default.deleteMany(components);
+    res.json({
+        success: true,
+        data: components,
+        message: 'Components deleted successfully',
     });
 });
 /**

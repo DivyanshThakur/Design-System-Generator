@@ -9,6 +9,7 @@ const User_1 = __importDefault(require("../models/User"));
 const ErrorResponse_1 = __importDefault(require("../utils/ErrorResponse"));
 const protectedHandler_1 = require("../utils/protectedHandler");
 const Theme_1 = __importDefault(require("../models/Theme"));
+const Component_1 = __importDefault(require("../models/Component"));
 const ObjectId = mongoose_1.default.Types.ObjectId;
 /**
  * @desc Create Theme
@@ -52,10 +53,52 @@ exports.updateThemeByProjectId = (0, protectedHandler_1.protectedHandler)(async 
         updateObj.radiusList = body.radiusList;
     if (body.spacingList?.length >= 7)
         updateObj.spacingList = body.spacingList;
+    if (body.variants?.length >= 1)
+        updateObj.variants = body.variants;
+    const addedVariants = body.addedVariants ?? [];
+    const deletedVariants = body.deletedVariants ?? [];
+    const componentTypes = [
+        'button',
+        'input-text',
+        'radio',
+        'checkbox',
+        'select',
+    ];
     const theme = await Theme_1.default.findOneAndUpdate({
         userId: new ObjectId(userId),
         projectId: new ObjectId(projectId),
     }, updateObj, { returnOriginal: false });
+    await Promise.all(theme.variants
+        .filter((v) => addedVariants.includes(v.name))
+        .map(async (v) => {
+        await Promise.all(componentTypes.map((type) => {
+            return Component_1.default.create({
+                projectId,
+                userId,
+                type,
+                themeId: theme._id,
+                variantId: v._id,
+                styles: {
+                    textColor: '',
+                    backgroundColor: '',
+                    borderColor: 'Primary',
+                    borderRadius: 's',
+                    paddingX: 'm',
+                    paddingY: 's',
+                },
+            });
+        }));
+    }));
+    await Promise.all(theme.variants
+        .filter((v) => deletedVariants.includes(v._id))
+        .map(async (v) => {
+        const components = await Component_1.default.find({
+            userId: theme.userId,
+            projectId: theme.projectId,
+            variantId: v._id,
+        });
+        await Component_1.default.deleteMany(components);
+    }));
     res.json({
         success: true,
         data: theme,

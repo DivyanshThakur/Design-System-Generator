@@ -34,6 +34,11 @@ const themeSchema = new Schema({
             value: String,
         },
     ],
+    variants: [
+        {
+            name: String,
+        },
+    ],
 }, {
     timestamps: true,
 });

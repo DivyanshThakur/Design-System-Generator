@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export interface IComponent {
     _id: string;
     type: string;
+    variantId: string;
     styles: {
         textColor: string;
         backgroundColor: string;
@@ -22,6 +23,7 @@ const initialState: ComponentInitialStateType = {
     selectedComponent: {
         _id: '',
         type: 'button',
+        variantId: '',
         styles: {
             textColor: 'Primary',
             backgroundColor: 'Primary',
@@ -38,7 +40,6 @@ const ComponentSlice = createSlice({
     initialState,
     reducers: {
         setSelectedComponent: (state, { payload }: { payload: IComponent }) => {
-            // save current selected state to list
             if (state.selectedComponent._id !== '') {
                 state.components = state.components.map((comp) => {
                     if (comp._id === state.selectedComponent._id)
@@ -69,18 +70,10 @@ const ComponentSlice = createSlice({
             state.selectedComponent.styles.paddingY =
                 payload.paddingY ?? state.selectedComponent.styles.paddingY;
         },
-
-        // setComponentById: (state, { payload }: { payload: IComponent }) => {
-        //     state.components = state.components.map((comp) => {
-        //         if (comp._id === payload._id) return payload;
-        //         return comp;
-        //     });
-        // },
         setSelectedComponentByType: (
             state,
             { payload }: { payload: string },
         ) => {
-            // save current selected state to list
             if (state.selectedComponent._id !== '') {
                 state.components = state.components.map((comp) => {
                     if (comp._id === state.selectedComponent._id)
@@ -90,7 +83,34 @@ const ComponentSlice = createSlice({
             }
 
             const newSelectedState = state.components.find((comp) =>
-                comp.type === payload ? comp : null,
+                comp.type === payload &&
+                (state.selectedComponent._id === '' ||
+                    state.selectedComponent.variantId === comp.variantId)
+                    ? comp
+                    : null,
+            );
+
+            if (newSelectedState) state.selectedComponent = newSelectedState;
+        },
+        setSelectedComponentByVariantId: (
+            state,
+            { payload }: { payload: string },
+        ) => {
+            if (state.selectedComponent._id !== '') {
+                state.components = state.components.map((comp) => {
+                    if (comp._id === state.selectedComponent._id)
+                        return state.selectedComponent;
+                    return comp;
+                });
+            }
+
+            if (state.selectedComponent.variantId === payload) return;
+
+            const newSelectedState = state.components.find((comp) =>
+                comp.variantId === payload &&
+                comp.type === state.selectedComponent.type
+                    ? comp
+                    : null,
             );
 
             if (newSelectedState) state.selectedComponent = newSelectedState;
@@ -109,6 +129,7 @@ export const {
     // setComponentById,
     setStyle,
     setSelectedComponentByType,
+    setSelectedComponentByVariantId,
     setSelectedComponent,
     resetComponent,
 } = ComponentSlice.actions;

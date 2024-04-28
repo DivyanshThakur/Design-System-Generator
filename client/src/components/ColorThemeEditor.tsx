@@ -35,6 +35,8 @@ const ColorThemeEditor = () => {
         if (data?.colors) updatedTheme.colors = data.colors;
         if (data?.radiusList) updatedTheme.radiusList = data.radiusList;
         if (data?.spacingList) updatedTheme.spacingList = data.spacingList;
+        if (data?.variants) updatedTheme.variants = data.variants;
+
         dispatch(setTheme(updatedTheme));
     }, [data, dispatch]);
 

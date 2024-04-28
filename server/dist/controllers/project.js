@@ -74,6 +74,7 @@ exports.createProject = (0, protectedHandler_1.protectedHandler)(async (req, res
         ],
         radiusList: pxList,
         spacingList: pxList,
+        variants: [{ name: 'Primary' }],
     });
     const componentTypes = [
         'button',
@@ -89,6 +90,7 @@ exports.createProject = (0, protectedHandler_1.protectedHandler)(async (req, res
             userId: user._id,
             type,
             themeId: theme._id,
+            variantId: theme.variants[0]._id,
             styles: {
                 textColor: '',
                 backgroundColor: '',
