@@ -20,6 +20,7 @@ import {
     setSelectedComponentByVariantId,
     setSelectedComponentByType,
     setStyle,
+    setSelectedComponent,
 } from '../redux/slices/component';
 import {
     useGetAllComponentsQuery,
@@ -52,13 +53,15 @@ const StyledComponentContainer = () => {
     useEffect(() => {
         if (data) {
             dispatch(setComponents(data));
-            dispatch(
-                setSelectedComponentByType(
-                    selectedComponent._id === ''
-                        ? 'button'
-                        : selectedComponent.type,
-                ),
-            );
+            if (selectedComponent._id !== '') {
+                dispatch(setSelectedComponentByType(selectedComponent.type));
+            } else {
+                dispatch(
+                    setSelectedComponent(
+                        data?.find((cmp: any) => cmp.type === 'button'),
+                    ),
+                );
+            }
         }
     }, [data, dispatch, selectedComponent]);
 
@@ -124,7 +127,10 @@ const StyledComponentContainer = () => {
                                 variant="outlined"
                                 id="select-variant"
                                 labelId="variantLabel"
-                                value={selectedComponent.variantId ?? theme.variants?.[0]?._id}
+                                value={
+                                    selectedComponent.variantId ??
+                                    theme.variants?.[0]?._id
+                                }
                                 label="Variant"
                                 name="variant"
                                 onChange={handleVariantChange}

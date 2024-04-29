@@ -47,7 +47,7 @@ const ComponentSlice = createSlice({
                     return comp;
                 });
             }
-            state.selectedComponent = payload;
+            if (payload._id !== '') state.selectedComponent = payload;
         },
 
         setStyle: (
@@ -74,6 +74,7 @@ const ComponentSlice = createSlice({
             state,
             { payload }: { payload: string },
         ) => {
+            if (!payload) return;
             if (state.selectedComponent._id !== '') {
                 state.components = state.components.map((comp) => {
                     if (comp._id === state.selectedComponent._id)
@@ -84,8 +85,7 @@ const ComponentSlice = createSlice({
 
             const newSelectedState = state.components.find((comp) =>
                 comp.type === payload &&
-                (state.selectedComponent._id === '' ||
-                    state.selectedComponent.variantId === comp.variantId)
+                state.selectedComponent.variantId === comp.variantId
                     ? comp
                     : null,
             );
@@ -126,7 +126,6 @@ const ComponentSlice = createSlice({
 
 export const {
     setComponents,
-    // setComponentById,
     setStyle,
     setSelectedComponentByType,
     setSelectedComponentByVariantId,
